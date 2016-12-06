@@ -259,7 +259,7 @@ func (this *MsgApp) DownloadFileSave(mediaId string, path string) error {
 	返回图片数据
 */
 func (this *MsgApp) DownloadImage(mediaId string) ([]byte, error) {
-	bs, err := this.download("image", mediaId)
+	bs, err := this.download(MediaTypeImage, mediaId)
 	if err != nil {
 		return nil, err
 	}
