@@ -61,6 +61,9 @@ func NewMsgApp(buin int32, appId, encAesKey string) (*MsgApp, error) {
 
 /*
 	设置回调
+	需监听一个回调的端口
+	如：http.ListenAndServe(":8899", demo)
+
 */
 func (this *MsgApp) SetReceiver(r Receiver) {
 	this.recv = r
