@@ -48,12 +48,14 @@ func main() {
 		log.Println("New app error:", err)
 		return
 	}
+	
 	token, expire, err := app.GetToken()
 	if err != nil {
 		log.Println("Get token error:", err)
 		return
 	}
 	log.Printf("Token: %s, Expire: %d", token, expire) //expire为过期的时间戳，单位秒
+	
 	err = app.SendTxtMsg(_User, "123")
 	if err != nil {
 		log.Println("Send msg error:", err)
