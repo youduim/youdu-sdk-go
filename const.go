@@ -1,22 +1,19 @@
 package ydapp
 
+var Server_Addr string                         //服务器地址和端口(协议务必带上)，例: http://localhost:7080
+var Callback_Url string = "/receive/youdu/msg" //设置回调的URI
+
 // 第三方接口URL
-const (
-	SCHEME = "http://"
+var (
+	API_GET_TOKEN = Server_Addr + "/v3/api/jgapp/ent.app.accesstoken.gen"
 
-	URL_YOUDU_API = "localhost:7080"
+	API_SEND_MSG = Server_Addr + "/v3/api/jgapp/ent.app.msg.send"
 
-	API_GET_TOKEN = SCHEME + URL_YOUDU_API + "/v3/api/jgapp/ent.app.accesstoken.gen"
+	API_UPLOAD_FILE = Server_Addr + "/v3/api/jgapp/ent.app.media.upload"
 
-	API_SEND_MSG = SCHEME + URL_YOUDU_API + "/v3/api/jgapp/ent.app.msg.send"
+	API_DOWNLOAD_FILE = Server_Addr + "/v3/api/jgapp/ent.app.media.get"
 
-	API_UPLOAD_FILE = SCHEME + URL_YOUDU_API + "/v3/api/jgapp/ent.app.media.upload"
-
-	API_DOWNLOAD_FILE = SCHEME + URL_YOUDU_API + "/v3/api/jgapp/ent.app.media.get"
-
-	API_SEARCH_FILE = SCHEME + URL_YOUDU_API + "/v3/api/jgapp/ent.app.media.search"
-
-	CALLBACK_RECV_MSG = "/receive/youdu/msg"
+	API_SEARCH_FILE = Server_Addr + "/v3/api/jgapp/ent.app.media.search"
 )
 
 //文件类型定义
