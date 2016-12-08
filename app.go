@@ -77,8 +77,8 @@ func (this *MsgApp) decrypt(s string) (*RawMsg, error) {
 	return AesDecrypt(s, this.aesKey)
 }
 
-func (this *MsgApp) post(ur, ct string, req []byte) (*ApiResponse, error) {
-	httpRsp, err := this.hc.Post(ur+"?accessToken="+this.accToken, ct, bytes.NewBuffer(req))
+func (this *MsgApp) post(api, ct string, req []byte) (*ApiResponse, error) {
+	httpRsp, err := this.hc.Post(Server_Addr+api+"?accessToken="+this.accToken, ct, bytes.NewBuffer(req))
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (this *MsgApp) post(ur, ct string, req []byte) (*ApiResponse, error) {
 }
 
 func (this *MsgApp) getFile(req []byte) ([]byte, error) {
-	httpRsp, err := this.hc.Post(API_DOWNLOAD_FILE+"?accessToken="+this.accToken, HttpJsonType, bytes.NewBuffer(req))
+	httpRsp, err := this.hc.Post(Server_Addr+API_DOWNLOAD_FILE+"?accessToken="+this.accToken, HttpJsonType, bytes.NewBuffer(req))
 	if err != nil {
 		return nil, err
 	}
@@ -310,7 +310,7 @@ func (this *MsgApp) download(_, mediaId string) ([]byte, error) {
 	return raw.Data, nil
 }
 
-func (this *MsgApp) SearchFile(mediaId string) (bool, error) {
+func (this *MsgApp) SearchFile(mediaId string) (string, int64, error) {
 	req := NewRequest()
 	req.Set("mediaId", mediaId)
 
@@ -322,22 +322,26 @@ func (this *MsgApp) SearchFile(mediaId string) (bool, error) {
 	bs, _ = em.Encode()
 	rsp, err := this.post(API_SEARCH_FILE, HttpJsonType, bs)
 	if err != nil {
-		return false, Error("Post to search file error", err)
+		return "", 0, Error("Post to search file error", err)
 	}
 	enc, err = rsp.GetString("encrypt")
 	if err != nil {
-		return false, Error("Get encrypt error", err)
+		return "", 0, Error("Get encrypt error", err)
 	}
 	raw, err := this.decrypt(enc)
 	if err != nil {
-		return false, Error("Decrypt error", err)
+		return "", 0, Error("Decrypt error", err)
 	}
 	pm, _ := NewJson(raw.Data)
-	exist, err := pm.Get("exist").Bool()
+	name, err := pm.Get("name").String()
 	if err != nil {
-		return false, err
+		return "", 0, err
 	}
-	return exist, nil
+	size, err := pm.Get("size").Int64()
+	if err != nil {
+		return "", 0, err
+	}
+	return name, size, nil
 }
 
 /*

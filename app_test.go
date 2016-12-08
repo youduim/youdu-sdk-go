@@ -15,6 +15,7 @@ const (
 )
 
 func TestAllApi(t *testing.T) {
+	Server_Addr = "http://localhost:7080"
 	demo, _ := NewMsgApp(_Buin, _AppId, _EncAesKey)
 
 	go http.ListenAndServe(":8899", demo)
@@ -147,11 +148,8 @@ func TestAllApi(t *testing.T) {
 	}
 	t.Log("Send exlink msg success.")
 
-	exist, err := demo.SearchFile(fileId)
+	_, _, err = demo.SearchFile(fileId)
 	if err != nil {
-		t.Error(err)
-	}
-	if !exist {
 		t.Error("File not exist")
 	}
 	t.Log("Search file success.")
