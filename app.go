@@ -82,6 +82,9 @@ func (this *MsgApp) post(api, ct string, req []byte) (*ApiResponse, error) {
 	if err != nil {
 		return nil, err
 	}
+	if httpRsp.StatusCode != http.StatusOK {
+		return nil, Error(httpRsp.Status, nil)
+	}
 	bd, err := ioutil.ReadAll(httpRsp.Body)
 	if err != nil {
 		return nil, err
@@ -98,6 +101,9 @@ func (this *MsgApp) getFile(req []byte) ([]byte, error) {
 	httpRsp, err := this.hc.Post(Server_Addr+API_DOWNLOAD_FILE+"?accessToken="+this.accToken, HttpJsonType, bytes.NewBuffer(req))
 	if err != nil {
 		return nil, err
+	}
+	if httpRsp.StatusCode != http.StatusOK {
+		return nil, Error(httpRsp.Status, nil)
 	}
 	bd, err := ioutil.ReadAll(httpRsp.Body)
 	if err != nil {
@@ -234,7 +240,7 @@ func (this *MsgApp) upload(ftype, fname string, data []byte) (string, error) {
 	返回文件数据
 */
 func (this *MsgApp) DownloadFile(mediaId string) ([]byte, error) {
-	bs, err := this.download(MediaTypeFile, mediaId)
+	bs, err := this.download(mediaId)
 	if err != nil {
 		return nil, err
 	}
@@ -247,7 +253,7 @@ func (this *MsgApp) DownloadFile(mediaId string) ([]byte, error) {
 	自动创建路径中的目录与文件
 */
 func (this *MsgApp) DownloadFileSave(mediaId string, path string) error {
-	data, err := this.download(MediaTypeFile, mediaId)
+	data, err := this.download(mediaId)
 	if err != nil {
 		return err
 	}
@@ -259,7 +265,7 @@ func (this *MsgApp) DownloadFileSave(mediaId string, path string) error {
 	返回图片数据
 */
 func (this *MsgApp) DownloadImage(mediaId string) ([]byte, error) {
-	bs, err := this.download(MediaTypeImage, mediaId)
+	bs, err := this.download(mediaId)
 	if err != nil {
 		return nil, err
 	}
@@ -272,7 +278,7 @@ func (this *MsgApp) DownloadImage(mediaId string) ([]byte, error) {
 	自动创建路径中的目录与文件
 */
 func (this *MsgApp) DownloadImageSave(mediaId string, path string) error {
-	data, err := this.download(MediaTypeImage, mediaId)
+	data, err := this.download(mediaId)
 	if err != nil {
 		return err
 	}
@@ -288,7 +294,7 @@ func (*MsgApp) save(data []byte, path string) error {
 	return ioutil.WriteFile(path, data, 0666)
 }
 
-func (this *MsgApp) download(_, mediaId string) ([]byte, error) {
+func (this *MsgApp) download(mediaId string) ([]byte, error) {
 	req := NewRequest()
 	req.Set("mediaId", mediaId)
 
