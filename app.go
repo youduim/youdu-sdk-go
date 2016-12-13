@@ -203,6 +203,8 @@ func (this *MsgApp) upload(ftype, fname string, data []byte) (string, error) {
 
 	bs, _ := req.Encode()
 	enc, _ := this.encrypt(bs)
+	mwr.WriteField("buin", fmt.Sprint(this.buin))
+	mwr.WriteField("appId", this.appId)
 	mwr.WriteField("encrypt", enc)
 
 	pw, _ := mwr.CreateFormFile("file", fname)
@@ -301,6 +303,8 @@ func (this *MsgApp) download(mediaId string) ([]byte, error) {
 	bs, _ := req.Encode()
 	enc, _ := this.encrypt(bs)
 	em := NewRequest()
+	em.Set("buin", this.buin)
+	em.Set("appId", this.appId)
 	em.Set("encrypt", enc)
 
 	bs, _ = em.Encode()
@@ -323,6 +327,8 @@ func (this *MsgApp) SearchFile(mediaId string) (string, int64, error) {
 	bs, _ := req.Encode()
 	enc, _ := this.encrypt(bs)
 	em := NewRequest()
+	em.Set("buin", this.buin)
+	em.Set("appId", this.appId)
 	em.Set("encrypt", enc)
 
 	bs, _ = em.Encode()
@@ -540,7 +546,12 @@ func (this *MsgApp) SendExlinkMsg(toUser string, links []*Exlink) error {
 }
 
 func (this *MsgApp) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	this.Receive(rw, req)
+	switch req.URL.Path {
+	case Callback_Url:
+		this.Receive(rw, req)
+	default:
+		http.NotFound(rw, req)
+	}
 }
 
 /*

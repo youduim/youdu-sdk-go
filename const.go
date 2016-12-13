@@ -5,15 +5,15 @@ var Callback_Url string = "/receive/youdu/msg" //设置回调的URI
 
 // 第三方接口URL
 var (
-	API_GET_TOKEN = "/v3/api/jgapp/ent.app.accesstoken.gen"
+	API_GET_TOKEN = "/cgi/gettoken"
 
-	API_SEND_MSG = "/v3/api/jgapp/ent.app.msg.send"
+	API_SEND_MSG = "/cgi/msg/send"
 
-	API_UPLOAD_FILE = "/v3/api/jgapp/ent.app.media.upload"
+	API_UPLOAD_FILE = "/cgi/media/upload"
 
-	API_DOWNLOAD_FILE = "/v3/api/jgapp/ent.app.media.get"
+	API_DOWNLOAD_FILE = "/cgi/media/get"
 
-	API_SEARCH_FILE = "/v3/api/jgapp/ent.app.media.search"
+	API_SEARCH_FILE = "/cgi/media/search"
 )
 
 //文件类型定义
