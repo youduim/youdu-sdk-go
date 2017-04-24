@@ -361,9 +361,10 @@ func (this *MsgApp) SearchFile(mediaId string) (string, int64, error) {
 	传入接收者用户名与消息内容
 	如果发送给多人，则用户间用"|"隔开，如cs1|cs2|cs3
 */
-func (this *MsgApp) SendTxtMsg(toUser, content string) error {
+func (this *MsgApp) SendTxtMsg(toUser, toDept, content string) error {
 	msg := NewRequest()
 	msg.Set("toUser", toUser)
+	msg.Set("toDept", toDept)
 	msg.Set("msgType", MsgTypeText)
 	msg.Set("text", map[string]interface{}{
 		"content": content,
@@ -393,18 +394,19 @@ func (this *MsgApp) SendTxtMsg(toUser, content string) error {
 	如果发送给多人，则用户间用"|"隔开，如cs1|cs2|cs3
 */
 
-func (this *MsgApp) SendImg(toUser, path string) error {
+func (this *MsgApp) SendImg(toUser, toDept, path string) error {
 	_, name := filepath.Split(path)
 	mediaId, err := this.UploadFile(name, path)
 	if err != nil {
 		return err
 	}
-	return this.SendImgMsg(toUser, mediaId)
+	return this.SendImgMsg(toUser, toDept, mediaId)
 }
 
-func (this *MsgApp) SendImgMsg(toUser, mediaId string) error {
+func (this *MsgApp) SendImgMsg(toUser, toDept, mediaId string) error {
 	msg := NewRequest()
 	msg.Set("toUser", toUser)
+	msg.Set("toDept", toDept)
 	msg.Set("msgType", MsgTypeImage)
 	msg.Set("image", map[string]interface{}{
 		"media_id": mediaId,
@@ -430,17 +432,18 @@ func (this *MsgApp) SendImgMsg(toUser, mediaId string) error {
 	传入已上传文件的mediaId与接收者用户名
 	如果发送给多人，则用户间用"|"隔开，如cs1|cs2|cs3
 */
-func (this *MsgApp) SendFile(toUser, name, path string) error {
+func (this *MsgApp) SendFile(toUser, toDept, name, path string) error {
 	mediaId, err := this.UploadFile(name, path)
 	if err != nil {
 		return err
 	}
-	return this.SendFileMsg(toUser, mediaId)
+	return this.SendFileMsg(toUser, toDept, mediaId)
 }
 
-func (this *MsgApp) SendFileMsg(toUser, mediaId string) error {
+func (this *MsgApp) SendFileMsg(toUser, toDept, mediaId string) error {
 	msg := NewRequest()
 	msg.Set("toUser", toUser)
+	msg.Set("toDept", toDept)
 	msg.Set("msgType", MsgTypeFile)
 	msg.Set("file", map[string]interface{}{
 		"media_id": mediaId,
@@ -471,7 +474,7 @@ func (this *MsgApp) SendFileMsg(toUser, mediaId string) error {
 	@toUser 消息接收者
 	如果发送给多人，则用户间用"|"隔开，如cs1|cs2|cs3
 */
-func (this *MsgApp) SendMpnewsMsg(toUser string, mpnews []*Mpnews) error {
+func (this *MsgApp) SendMpnewsMsg(toUser, toDept, string, mpnews []*Mpnews) error {
 	mplist := make([]interface{}, 0)
 	for _, mp := range mpnews {
 		news := NewRequest()
@@ -488,6 +491,7 @@ func (this *MsgApp) SendMpnewsMsg(toUser string, mpnews []*Mpnews) error {
 	}
 	msg := NewRequest()
 	msg.Set("toUser", toUser)
+	msg.Set("toDept", toDept)
 	msg.Set("msgType", MsgTypeMpnews)
 	msg.Set("mpnews", mplist)
 
@@ -512,7 +516,7 @@ func (this *MsgApp) SendMpnewsMsg(toUser string, mpnews []*Mpnews) error {
 	@digest 文章摘要
 	@media_id 图片的media_id, 如果media_id为空, 则从path读取文件
 */
-func (this *MsgApp) SendExlinkMsg(toUser string, links []*Exlink) error {
+func (this *MsgApp) SendExlinkMsg(toUser, toDept, string, links []*Exlink) error {
 	list := make([]interface{}, 0)
 	for _, link := range links {
 		ex := NewRequest()
@@ -527,6 +531,7 @@ func (this *MsgApp) SendExlinkMsg(toUser string, links []*Exlink) error {
 	}
 	msg := NewRequest()
 	msg.Set("toUser", toUser)
+	msg.Set("toDept", toDept)
 	msg.Set("msgType", MsgTypeExlink)
 	msg.Set("exlink", list)
 
