@@ -588,7 +588,7 @@ func (this *MsgApp) Receive(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	if this.recv != nil {
-		this.recv.Receive(&msg)
+		go this.recv.Receive(&msg)
 	}
 
 	log.Println("Recv msg:", msg)

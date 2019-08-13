@@ -42,7 +42,7 @@ const (
 )
 
 func main() {
-	ydapp.Server_Addr := "http://localhost:7080" //设置服务器地址
+	ydapp.Server_Addr = "http://localhost:7080" //设置服务器地址
 	app, err := ydapp.NewMsgApp(_Buin, _AppId, _EncAesKey)
 	if err != nil {
 		log.Println("New app error:", err)
